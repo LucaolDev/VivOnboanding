@@ -9,8 +9,6 @@ router.use(express.json());
 
 router.post('/', async (req, res) => {
   try {
-    console.log(process.env.DATABASE_URL)
-
     const { name, email, Funcionario } = req.body;
 
     const gestor = await prisma.Gestor.create({
@@ -18,7 +16,7 @@ router.post('/', async (req, res) => {
         name,
         email,
         funcionarios: {
-          create: Funcionario
+          create: Funcionario || []
         }
       }
     });
@@ -60,10 +58,15 @@ router.delete('/:id', async (req, res) => {
     const {id} = req.params;
 
     try{
-
-        await prisma.Funcionario.deleteMany({
-            where: {gestorId: Number(id)}
+        const funcionarioAssociados = await prisma.Funcionario.count({
+            where: { gestorId: Number(id)}
         });
+
+        if(funcionarioAssociados > 0){
+            return res.status(400).json({
+                error:'Gestor possui funcionários associados. Atualize os gestores dos funcionários antes de deletar.'
+            })
+        }
 
         await prisma.Gestor.delete({
             where: {id: Number(id)}

@@ -9,8 +9,6 @@ router.use(express.json());
 
 router.post('/', async (req, res) => {
   try {
-    console.log(process.env.DATABASE_URL)
-
     const { name, email, gestorId } = req.body;
 
     const funcionario = await prisma.Funcionario.create({
