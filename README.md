@@ -1,5 +1,3 @@
-# VivOnboanding
-
 # 📲 Vivo Onboarding
 
 Projeto fullstack de **onboarding de colaboradores** da Vivo. A aplicação permite gerenciar trilhas de integração, cursos obrigatórios e técnicos, e acompanhar o progresso de cada colaborador de forma visual e interativa.
