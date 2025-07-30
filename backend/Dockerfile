@@ -4,14 +4,12 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Instala nodemon globalmente (importante!)
-RUN npm install 
-
-# Instala as dependências do projeto
 RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+RUN chmod +x entrypoint.sh
 
-CMD ["npm", "run", "dev"]
+EXPOSE 3000
+
+CMD ["./entrypoint.sh"]

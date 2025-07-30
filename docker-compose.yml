@@ -16,7 +16,11 @@ services:
   backend:
     build: ./backend
     ports:
-      - "3001:3001"
+      - "3000:3000"
+      - "5555:5555"
+    volumes:
+      - ./backend:/app
+    command: npm run dev
     environment:
       DATABASE_URL: postgres://postgres:36097174@postgres:5432/vivo_onboarding
     depends_on:
@@ -26,9 +30,11 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     depends_on:
       - backend
 
 volumes:
   pgdata:
-  
