@@ -32,3 +32,21 @@ export const createDepartments = async (dep: Partial<Department>) => {
   if (!response.ok) throw new Error('Erro ao criar departamentos');
   return await response.json();
 };
+
+
+export const deleteDepartment = async (departmentId: string) => {
+  try {
+    const response = await fetch(`/api/departments/${departmentId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao deletar departamento: ${response.statusText}`);
+    }
+
+    return true; 
+  } catch (error) {
+    console.error("Erro no deleteDepartment:", error);
+    throw error;
+  }
+};

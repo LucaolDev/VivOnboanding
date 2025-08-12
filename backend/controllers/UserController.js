@@ -1,4 +1,4 @@
-import {PrismaClient, Role} from '@prisma/client';
+import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -85,20 +85,20 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ message: 'Role inválido' });
     }
 
-    const newUser = await prisma.user.create({
-      data:{
-        name,
-        email,
-        password: senhaCriptograda,
-        role, 
-        department: {
-          connect: { name: department }
-        },
-        image,
-        isNewUser,
-        createdAt: new Date(),
-      },
-    });
+  const newUser = await prisma.user.create({
+    data: {
+    name,
+    email,
+    password: senhaCriptograda,
+    role,
+    department: department ? { connect: { name: department } } : undefined,
+    team: team ? { connect: { name: team } } : undefined,
+    manager: managerId ? { connect: { id: managerId } } : undefined,
+    image,
+    isNewUser,
+    createdAt: new Date(),
+  },
+});
 
     if (managerId) {
       newUser.manager = { connect: { id: managerId } };
@@ -157,7 +157,8 @@ export const getAllUsers = async (req,res) => {
         isNewUser: true,
         managerId: true,
         createdAt: true
-      }
+      },
+      orderBy: { createdAt: 'desc' }
     });
 
     res.status(200).json(users);
@@ -177,7 +178,7 @@ export const deleteUser = async (req, res) => {
           return res.status(404).json({message: 'Usuário não encontrado'});
         }
 
-        await prisma.user.deleteMany({
+        await prisma.user.delete({
             where: {email}
         });
 

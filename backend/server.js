@@ -15,13 +15,13 @@ app.use(cors({
 
 app.use(express.json());
 
+
 app.use('/auth', userRoutes);
 app.use('/trail', trailRoutes);
 app.use('/department', departmentRoutes);
 app.use('/team', teamRoutes);
 app.use('/step', stepRoutes);
 
-
 app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000')
+  console.log('Servidor rodando na porta 3000')
 })

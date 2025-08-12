@@ -1,0 +1,30 @@
+{
+  "name": "vivonboanding",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Projeto fullstack de **onboarding de colaboradores** da Vivo. A aplicação permite gerenciar trilhas de integração, cursos obrigatórios e técnicos, e acompanhar o progresso de cada colaborador de forma visual e interativa.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucaolDev/VivOnboanding.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucaolDev/VivOnboanding/issues"
+  },
+  "homepage": "https://github.com/LucaolDev/VivOnboanding#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

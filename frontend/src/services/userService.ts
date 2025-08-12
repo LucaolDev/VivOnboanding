@@ -87,3 +87,22 @@ export const deleteUser = async (email: string) => {
 
   return await response.json();
 };
+
+export const updateUser = async (id: string, userData: Partial<User>) => {
+  const token = localStorage.getItem('token');
+
+  const response = await fetch(`${apiUrl}/user/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Erro ao atualizar usuário');
+  }
+
+  return await response.json();
+};

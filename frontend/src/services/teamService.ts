@@ -32,3 +32,20 @@ export const createTeam = async (dep: Partial<Team>) => {
   if (!response.ok) throw new Error('Erro ao criar time');
   return await response.json();
 };
+
+export const deleteTeam = async (teamId: string) => {
+  try {
+    const response = await fetch(`/api/teams/${teamId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao deletar time: ${response.statusText}`);
+    }
+
+    return true; 
+  } catch (error) {
+    console.error("Erro no deleteTeam:", error);
+    throw error;
+  }
+};

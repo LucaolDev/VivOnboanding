@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Edit, Trash2, Users, Building,Save,X,UserPlus,Crown, Mail,Phone,ChevronDown,ChevronRight } from 'lucide-react';
 import { Team, Department, User } from '../../type/Tabelas';
-import { getDepartments, updateDepartments, createDepartments  } from '../../services/departmentService';
-import { createTeam, updateTeams } from '../../services/teamService';
-import { getAllUsers } from '../../services/userService';
+import { getDepartments, updateDepartments, createDepartments, deleteDepartment } from '../../services/departmentService';
+import { createTeam, updateTeams, deleteTeam} from '../../services/teamService';
+import { getAllUsers, createUser, updateUser} from '../../services/userService';
+
 
 
 const UserManagement: React.FC = () => {
@@ -136,23 +137,89 @@ const UserManagement: React.FC = () => {
     }
 
     const handleSaveUser = async (user: User) => {
-        try{
-            if(users.find(d => d.id === user.id)){
-                await updatedUser(user.id, user);
-                setDepartments(departments.map(d => d.id === dept.id ? dept : d));
-            }else {
-                const newDepartments = await createDepartments(dept);
-                setDepartments([...departments, newDepartments]);
-            }
-
-            setShowDepartmentModal(false);
-            setEditingDepartment(null);
-        }catch(error){
-            console.error("Erro ao salvar departamento: ", error);
-        }
+   try {
+    if (users.find(u => u.id === user.id)) {
+      // Atualiza usuário existente
+      await updateUser(user.id, user);
+      setUsers(users.map(u => u.id === user.id ? user : u));
+    } else {
+      // Cria novo usuário
+      const newUser = await createUser(user);
+      setUsers([...users, newUser]);
     }
 
+    setShowUserModal(false);
+    setEditingUser(null);
+  } catch (error) {
+    console.error("Erro ao salvar usuário: ", error);
+  }
+};
 
+const handleDeleteDepartment = async (departmentId: string) => {
+  try {
+    await deleteDepartment(departmentId); // Chamada para deletar no backend
+    setDepartments(departments.filter(d => d.id !== departmentId)); // Remove localmente
+  } catch (error) {
+    console.error("Erro ao excluir departamento: ", error);
+  }
+};
+
+const handleDeleteTeam = async (departmentId: string, teamId: string) => {
+  try {
+    await deleteTeam(teamId); // Chamada para deletar no backend
+    const updatedDepartments = departments.map(dept => {
+      if (dept.id === departmentId) {
+        return {
+          ...dept,
+          teams: dept.teams?.filter(t => t.id !== teamId) || []
+        };
+      }
+      return dept;
+    });
+    setDepartments(updatedDepartments);
+  } catch (error) {
+    console.error("Erro ao excluir time: ", error);
+  }
+};
+
+const toggleTeamExpansion = (teamId: string) =>
+  setExpandedTeams(prev =>
+    prev.includes(teamId)
+      ? prev.filter(id => id !== teamId)
+      : [...prev, teamId]
+  );
+
+  const getDepartmentUsers = (departmentId: string) => {
+  return users.filter(user => user.departmentId === departmentId);
+};
+
+const getTeamUsers = (teamId: string) => {
+  return users.filter(user => user.teamId === teamId);
+};
+
+const getTeamName = (teamId: string) => {
+  if (!teamId) return 'Sem time';
+  for (const dept of departments) {
+    const team = dept.teams?.find(t => t.id === teamId);
+    if (team) {
+      return team.name;
+    }
+  }
+  return 'Time não encontrado';
+};
+
+const getManagerName = (managerId?: string) => {
+  const manager = users.find(user => user.id === managerId);
+  return manager ? manager.name : 'Gerente não encontrado';
+};
+
+
+
+return (
+  <div>
+    <h1>Gestão de Usuários</h1>
+  </div>
+);
 
 
 }
