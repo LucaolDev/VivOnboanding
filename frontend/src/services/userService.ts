@@ -2,39 +2,38 @@ import { User } from '../type/Tabelas';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+export const loginUser = async (email: string, password: string) => {
+  const response = await fetch(`${apiUrl}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
 
-export const loginUser = async(email: string, password: string) => {
-    const response = await fetch(`${apiUrl}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({email, password}),
-    })
+  if (!response.ok) {
+    throw new Error('Email ou senha inválidos');
+  }
 
-    if(!response.ok){
-        throw new Error('Email ou senha inválidos');
-    }
-
-    return await response.json();
-}
+  return await response.json(); 
+};
 
 export const createUser = async (userData: any) => {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-    const response = await fetch(`${apiUrl}/auth/create`, {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(userData)
-    });
+  const response = await fetch(`${apiUrl}/auth/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
 
-    if(!response.ok){
-        throw new Error("Erro ao criar usúario");
-    }
+  if (!response.ok) {
+    throw new Error('Erro ao criar usuário');
+  }
 
-    return await response.json();
-}
+  return await response.json();
+};
 
 export const changePassword = async (email: string, currentPassword: string, newPassword: string) => {
   const token = localStorage.getItem('token');
@@ -71,10 +70,10 @@ export const getAllUsers = async () => {
   return await response.json();
 };
 
-export const deleteUser = async (email: string) => {
+export const deleteUser = async (id: number) => {
   const token = localStorage.getItem('token');
 
-  const response = await fetch(`${apiUrl}/user/${email}`, {
+  const response = await fetch(`${apiUrl}/user/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -88,7 +87,7 @@ export const deleteUser = async (email: string) => {
   return await response.json();
 };
 
-export const updateUser = async (id: string, userData: Partial<User>) => {
+export const updateUser = async (id: number, userData: Partial<User>) => {
   const token = localStorage.getItem('token');
 
   const response = await fetch(`${apiUrl}/user/${id}`, {
