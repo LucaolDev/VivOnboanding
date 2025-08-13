@@ -52,14 +52,14 @@ export interface Step {
 }
 
 export interface Content {
-  id?: string;
+  id: string;
   videoUrl?: string;
   description?: string;
   documentUrl?: string;
 
   stepId?: string;
   step?: Step;
-  question?: Question[];
+  question: Question[];
 }
 
 export interface Question {
@@ -90,7 +90,7 @@ export interface Team{
   id: string;
   name: string;
   departmentId: string;
-  memberCount: number;
+  memberCount?: number;
   color: string;
   
   leaderId?: User;
