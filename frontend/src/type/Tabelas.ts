@@ -7,6 +7,7 @@ export interface User {
   image?: string;
   createdAt: string;
   isNewUser?: boolean;
+  isManager?: boolean;
   
   managerId?: string;
   departmentId?: string;
@@ -80,7 +81,7 @@ export interface Department{
   userCount: number;
 
   managerId?: User;
-  teams?: Team[];
+  teams: Team[];
   users?: User[];
   trails?: Trail[];
 
