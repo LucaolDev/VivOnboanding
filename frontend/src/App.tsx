@@ -3,7 +3,8 @@ import {LoginForm} from './components/Auth/LoginForm';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Menu } from '../src/components/Layout/Sidebar';
 import { Header } from '../src/components/Layout/Header';
-import RhTrail from '../src/pages/Trilha/RhTrail'
+import RhTrail from '../src/pages/Trilha/RhTrail';
+import UserManagement from '../src/pages/GestaoUser/RhUser.js';
 
 const AppContent: React.FC = () =>{
   const { user } = useAuth();
@@ -53,20 +54,20 @@ const AppContent: React.FC = () =>{
     if(user?.isNewUser === true){
       switch(currentPage){ 
         case 'home':
-          return <RhTrail/>
+          return <UserManagement/>
       }
     }
     else if(user.role && department !== "rh"){
       switch(currentPage){ 
         case 'home':
-          return <RhTrail/>
+          return <UserManagement/>
       }
     }else if(user.role && department === "rh"){
       switch(currentPage){ 
         case 'home':
-          return <RhTrail/>
+          return <UserManagement/>
         default:
-          return <RhTrail/>
+          return <UserManagement/>
       }
     }
 

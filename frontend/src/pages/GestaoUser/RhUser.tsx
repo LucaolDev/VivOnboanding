@@ -5,11 +5,6 @@ import { getDepartments, updateDepartments, createDepartments, deleteDepartment 
 import { createTeam, updateTeams, deleteTeam } from '../../services/teamService';
 import { getAllUsers, createUser, updateUser } from '../../services/userService';
 
-
-
-
-
-
 const UserManagement: React.FC = () => {
 
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -940,4 +935,4 @@ const UserModal: React.FC<UserModalProps> = ({ user, departments, users, onSave,
   );
 };
 
-
+export default UserManagement;
