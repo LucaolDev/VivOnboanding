@@ -80,7 +80,7 @@ export interface Department{
   color: string;
   userCount: number;
 
-  managerId?: User;
+  managerId?: string;
   teams: Team[];
   users?: User[];
   trails?: Trail[];
@@ -94,7 +94,7 @@ export interface Team{
   memberCount?: number;
   color: string;
   
-  leaderId?: User;
+  leaderId?: string;
   department?: Department;
   users?: User[];
   trails?: Trail[];

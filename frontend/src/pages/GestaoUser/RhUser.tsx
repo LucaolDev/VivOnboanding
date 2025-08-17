@@ -42,7 +42,7 @@ const UserManagement: React.FC = () => {
       name: '',
       color: 'bg-blue-500',
       userCount: 0,
-      teams: []
+      teams: [], 
     });
     setShowDepartmentModal(true);
   };
@@ -51,7 +51,7 @@ const UserManagement: React.FC = () => {
     setEditingTeam({
       id: Date.now().toString(),
       name: '',
-      departmentId, // ✅ agora vem o ID correto
+      departmentId, 
       memberCount: 0,
       color: 'bg-blue-400'
     });
@@ -83,7 +83,6 @@ const UserManagement: React.FC = () => {
     setShowTeamModal(true);
   };
 
-  //salvamento dos dados e chamada das rotas de edição
   const handleSaveDepartment = async (dept: Department) => {
     try {
       if (departments.find(d => d.id === dept.id)) {
@@ -137,11 +136,9 @@ const UserManagement: React.FC = () => {
   const handleSaveUser = async (user: User) => {
     try {
       if (users.find(u => u.id === user.id)) {
-        // Atualiza usuário existente
         await updateUser(Number(user.id), user);
         setUsers(users.map(u => u.id === user.id ? user : u));
       } else {
-        // Cria novo usuário
         const newUser = await createUser(user);
         setUsers([...users, newUser]);
       }
@@ -155,8 +152,8 @@ const UserManagement: React.FC = () => {
 
   const handleDeleteDepartment = async (departmentId: string) => {
     try {
-      await deleteDepartment(departmentId); // Chamada para deletar no backend
-      setDepartments(departments.filter(d => d.id !== departmentId)); // Remove localmente
+      await deleteDepartment(departmentId); 
+      setDepartments(departments.filter(d => d.id !== departmentId)); 
     } catch (error) {
       console.error("Erro ao excluir departamento: ", error);
     }
@@ -164,7 +161,7 @@ const UserManagement: React.FC = () => {
 
   const handleDeleteTeam = async (departmentId: string, teamId: string) => {
     try {
-      await deleteTeam(teamId); // Chamada para deletar no backend
+      await deleteTeam(teamId);
       const updatedDepartments = departments.map(dept => {
         if (dept.id === departmentId) {
           return {
@@ -401,7 +398,13 @@ const UserManagement: React.FC = () => {
                       <div className="text-sm text-gray-600">
                         <p>{getTeamUsers(team.id).length} membros</p>
                         {team.leaderId && (
-                          <p>Líder: {getManagerName(team?.leaderId.id)}</p>
+                          <p>
+                            Líder: {getManagerName(
+                              typeof team.leaderId === 'object' && team.leaderId !== null && 'id' in team.leaderId
+                                ? (team.leaderId as { id: string }).id
+                                : team.leaderId
+                            )}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -583,13 +586,14 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({ department, users, on
               Gerente do Departamento
             </label>
             <select
-              value={formData.managerId?.id || ''}
+              value={
+                typeof formData.managerId === 'object' && formData.managerId !== null && 'id' in formData.managerId
+                  ? (formData.managerId as { id: string }).id
+                  : formData.managerId || ''
+              }
               onChange={(e) => {
-                const selectedUserId = e.target.value;
-                const selectedUser = selectedUserId
-                  ? users.find(u => u.id === selectedUserId)
-                  : undefined;
-                setFormData({ ...formData, managerId: selectedUser });
+                const selectedUser = users.find(u => u.id === e.target.value);
+                setFormData({ ...formData, managerId: selectedUser ? selectedUser.id : undefined });
               }}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
@@ -694,12 +698,12 @@ const TeamModal: React.FC<TeamModalProps> = ({ team, users, onSave, onClose }) =
               Líder do Time
             </label>
             <select
-              value={formData.leaderId?.id || ''}
+              value={typeof formData.leaderId === 'string' ? formData.leaderId : ''}
               onChange={(e) => {
-                const selectedUserId = e.target.value;
-                const selectedUser = users.find(u => u.id === selectedUserId);
-                setFormData({ ...formData, leaderId: selectedUser });
-              }} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                const selectedUser = users.find(u => u.id === e.target.value);
+                setFormData({ ...formData, leaderId: selectedUser ? selectedUser.id : undefined });
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="">Selecione um líder</option>
               {users.map((user) => (
@@ -904,9 +908,8 @@ const UserModal: React.FC<UserModalProps> = ({ user, departments, users, onSave,
             <input
               type="checkbox"
               id="isManager"
-              checked={formData.isManager}
+              checked={!!formData.isManager}
               onChange={(e) => setFormData({ ...formData, isManager: e.target.checked })}
-              className="mr-2"
             />
             <label htmlFor="isManager" className="text-sm text-gray-700">
               É gerente/líder
